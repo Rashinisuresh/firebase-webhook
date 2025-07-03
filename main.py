@@ -1,17 +1,22 @@
 from flask import Flask, request, jsonify
+import os
 
-app = Flask(_name_)
+app = Flask(__name__)
 
-@app.route('/')
+@app.route("/", methods=["GET"])
 def home():
-    return "✅ Hello! Rashini AI is working."
+    return "✅ HerPath Backend is Live!"
 
-# Optional POST route
-@app.route('/save', methods=['POST'])
-def save_data():
-    data = request.get_json()
-    return jsonify({"received": data}), 200
+@app.route("/webhook", methods=["POST"])
+def webhook():
+    data = request.get_json(force=True)
+    print("📥 Data received from webhook:", data)
 
-# Only used for local testing — Render doesn't use this line
-if _name_ == '_main_':
-    app.run(debug=True)
+    # Add logic to handle Firebase input or Google AI Studio data
+    # For example, saving to Firebase, logging, etc.
+
+    return jsonify({"status": "success", "message": "Data received"}), 200
+
+if __name__ == "__main__":
+    port = int(os.environ.get("PORT", 10000))
+    app.run(host="0.0.0.0", port=port)
